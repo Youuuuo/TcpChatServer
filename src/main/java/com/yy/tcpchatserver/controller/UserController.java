@@ -162,11 +162,20 @@ public class UserController {
      */
     @PostMapping("/updateUserPwd")
     public R updateUserPwd(@RequestBody UpdateUserPwdRequestVo requestVo) {
-        // System.out.println("更新密码的请求参数为：" + requestVo);
-        Map<String, Object> resMap = userService.updateUserPwd(requestVo);
-        Integer code = (Integer) resMap.get("code");
-        if (code.equals(ResultEnum.SUCCESS.getCode()))
-            return R.ok().message((String) resMap.get("msg"));
-        else return R.error().code(code).message((String) resMap.get("msg"));
+        System.out.println("更新密码的请求参数为：" + requestVo);
+        String oldPwd = requestVo.getOldPwd();
+        String newPwd = requestVo.getNewPwd();
+        if (oldPwd.equals(newPwd)){
+            System.out.println("更新密码失败");
+           return   R.error().message("新旧密码一样，请重新修改！");
+        } else {
+            Map<String, Object> resMap = userService.updateUserPwd(requestVo);
+            Integer code = (Integer) resMap.get("code");
+            if (code.equals(ResultEnum.SUCCESS.getCode())){
+                System.out.println("更新密码成功");
+                return R.ok().message((String) resMap.get("msg"));
+            }
+            else return R.error().code(code).message((String) resMap.get("msg"));
+        }
     }
 }
