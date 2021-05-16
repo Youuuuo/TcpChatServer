@@ -187,7 +187,7 @@ public class SocketIoListener {
             // System.out.println("待插入的群聊消息为：" + groupMessage);
             groupMessageService.addNewGroupMessage(groupMessage);
         }
-        //通知该房间收到消息接受到消息
+        //通过房间id获取房间内的所有用户，建立socket连接，将消息发送给用户
         Collection<SocketIOClient> clients = socketIOServer.getRoomOperations(newMessageVo.getRoomId()).getClients(); //实际上同一房间只有2个客户端
         for (SocketIOClient item : clients) {
             if (item != client) {
