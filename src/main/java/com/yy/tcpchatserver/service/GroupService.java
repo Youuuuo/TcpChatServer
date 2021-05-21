@@ -119,6 +119,24 @@ public class GroupService {
         return groups.getMappedResults();
     }
 
+
+    public List<SearchGroupResultVo> getGroupByCode(String grouId) {
+        List<SearchGroupResultVo>  groupList = new ArrayList<SearchGroupResultVo>();
+        Aggregation aggregation = Aggregation.newAggregation(
+                Aggregation.lookup(
+                        "users",
+                        "holderUserId",
+                        "_id",
+                        "holderUsers"
+                )
+        );
+        AggregationResults<SearchGroupResultVo> groups = mongoTemplate.aggregate(aggregation, "groups", SearchGroupResultVo.class);
+        System.out.println(groups.getMappedResults() + "查找的数据");
+        List<SearchGroupResultVo> mappedResults = groups.getMappedResults();
+        System.out.println(mappedResults.stream().filter(item -> item.getCode() == grouId) + "过滤");
+        return groupList;
+    }
+
     //添加事务管理，有异常则回滚
     @Transactional
     //退出群聊操作

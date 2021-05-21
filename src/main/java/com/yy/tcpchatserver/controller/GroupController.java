@@ -81,6 +81,14 @@ public class GroupController {
         List<SearchGroupResultVo> allGroup = groupService.getAllGroup();
         return R.ok().data("allGroup", allGroup);
     }
+    /**
+     * 获取所有群聊
+     */
+    @GetMapping("/getGroupByCode")
+    public R getGroupByCode(String grouId) {
+        List<SearchGroupResultVo> Group = groupService.getGroupByCode(grouId);
+        return R.ok().data("allGroup", Group);
+    }
 
     /**
      * 退出群聊

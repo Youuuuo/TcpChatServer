@@ -274,6 +274,14 @@ public class UserService {
         return userDao.findAll();
     }
 
+    // 根据账号获取用户
+    public List<User> getUsersByUsername(String username) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("username").is(username));
+        System.out.println("查找条间"+ query);
+        return mongoTemplate.find(query, User.class);
+    }
+
     // 根据注册时间获取用户
     public List<User> getUsersBySignUpTime(String lt, String rt) {
         Query query = new Query();

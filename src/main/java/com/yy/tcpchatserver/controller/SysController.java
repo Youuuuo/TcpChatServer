@@ -181,6 +181,20 @@ public class SysController {
         List<User> userList = userService.getUserList();
         return R.ok().data("userList", userList);
     }
+
+    /**
+     * 通过昵称获取用户信息
+     */
+    @GetMapping("/getUserByName")
+    @ResponseBody
+    public R getUserByName(String username) {
+        if (username == null){
+            return R.error().message("查找失败！");
+        }
+        System.out.println(username + "搜索的昵称");
+        List<User> userList = userService.getUsersByUsername(username);
+        return R.ok().data("userList", userList);
+    }
     /**
      * 根据uuid删除用户
      */
