@@ -59,7 +59,7 @@ public class UserService {
             User user = new User();
             user.setUsername(rVo.getUsername());
             user.setPassword(newPass);
-            user.setCode(String.valueOf(accountPool.getCode() + ConstValueEnum.INITIAL_NUMBER));
+            user.setCode(String.valueOf(accountPool.getCode() + ConstValueEnum.INITIAL_NUMBER));  //随机生成usercode
             user.setPhoto(rVo.getAvatar());
             user.setNickname(ChatServerUtil.randomNickname());
             userDao.save(user);
