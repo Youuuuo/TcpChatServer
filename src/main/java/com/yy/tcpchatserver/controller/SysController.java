@@ -18,6 +18,7 @@ import org.apache.commons.io.IOUtils;
 import org.csource.common.MyException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ClassUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,11 +26,16 @@ import javax.annotation.Resource;
 import javax.management.Query;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.transform.Result;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/sys")
@@ -57,17 +63,17 @@ public class SysController {
     @GetMapping("/getFaceImages")
     @ResponseBody
     public R getFaceImages() {
-        //String path = ClassUtils.getDefaultClassLoader().getResource("").getPath() + "static/face";
-        //System.out.println(path);
+//        String path = ClassUtils.getDefaultClassLoader().getResource("").getPath() + "static/face";
+//        System.out.println(path);
         ArrayList<String> files = new ArrayList<>();
-        //File file = new File(path);
-        /*for (File item : Objects.requireNonNull(file.listFiles())) {
+        File file = new File("E:\\小游的毕设\\TcpChatServer\\src\\main\\resources\\static\\face");
+        for (File item : Objects.requireNonNull(file.listFiles())) {
             files.add(item.getName());
-        }*/
-        for (int i = 1; i <= 22; i++) {
-            files.add("face" + i + ".jpg");
         }
-        files.add("ronaldo1.jpg");
+//        for (int i = 1; i <= 22; i++) {
+//            files.add("face" + i + ".jpg");
+//        }
+//        files.add("ronaldo1.jpg");
         return R.ok().data("files", files);
     }
 
@@ -187,12 +193,12 @@ public class SysController {
      */
     @GetMapping("/getUserByName")
     @ResponseBody
-    public R getUserByName(String username) {
-        if (username == null){
+    public R getUserByName(String selectData, String inputData) {
+        if (selectData == null){
             return R.error().message("查找失败！");
         }
-        System.out.println(username + "搜索的昵称");
-        List<User> userList = userService.getUsersByUsername(username);
+        System.out.println(selectData + "搜索的昵称");
+        List<User> userList = userService.getUsersByUsername(selectData,inputData);
         return R.ok().data("userList", userList);
     }
     /**
@@ -264,5 +270,46 @@ public class SysController {
     public R getFeedbackList() {
         List<FeedBackResultVo> feedbackList = sysService.getFeedbackList();
         return R.ok().data("feedbackList", feedbackList);
+    }
+
+
+    @PostMapping("/uploadUi")
+    @ResponseBody
+    public R upFile(@RequestParam("name")String name, @RequestParam("files") MultipartFile[] files ) {
+//        String path = ClassUtils.getDefaultClassLoader().getResource("").getPath() + "static/face";
+        System.out.println("开始");
+        System.out.println(name);
+        if(files != null) {
+            for(MultipartFile file : files) {
+                String fileName = file.getOriginalFilename();
+                System.out.println(fileName);
+                try{
+                    File mkdir = new File("E:\\小游的毕设\\TcpChatServer\\src\\main\\resources\\static\\face");
+                    if(!mkdir.exists()) {
+                        mkdir.mkdirs();
+                    }
+                    //定义输出流，将文件写入硬盘
+                    System.out.println("path" + mkdir);
+                    FileOutputStream os = new FileOutputStream(mkdir.getPath()+"\\"+fileName);
+                    System.out.println("开始3" + os);
+                    InputStream in = file.getInputStream();
+                    int b = 0;
+                    while((b=in.read())!=-1){ //读取文件
+                        os.write(b);
+                    }
+                    os.flush(); //关闭流
+                    in.close();
+                    os.close();
+
+                }catch(Exception  e) {
+                    e.printStackTrace();
+                    return R.error();
+                }
+            }
+            return  R.ok();
+        }else {
+            return R.error();
+        }
+
     }
 }

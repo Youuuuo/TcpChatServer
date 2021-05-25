@@ -275,9 +275,9 @@ public class UserService {
     }
 
     // 根据账号获取用户
-    public List<User> getUsersByUsername(String username) {
+    public List<User> getUsersByUsername(String selectData, String inputData) {
         Query query = new Query();
-        query.addCriteria(Criteria.where("username").is(username));
+        query.addCriteria(Criteria.where(selectData).is(inputData));
         System.out.println("查找条间"+ query);
         return mongoTemplate.find(query, User.class);
     }

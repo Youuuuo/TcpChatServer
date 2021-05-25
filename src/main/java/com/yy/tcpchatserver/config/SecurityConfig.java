@@ -59,7 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         //巨坑，这里不能加上context-path:/chat，不然不能拦截
-        web.ignoring().antMatchers("/user/getCode", "/sys/getFaceImages", "/user/register", "/sys/downloadFile",
+        web.ignoring().antMatchers("/user/getCode","/sys/uploadUi", "/sys/getFaceImages", "/user/register", "/sys/downloadFile",
                 "/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**", "/superuser/login"
         );
     }
